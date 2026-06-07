@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Intelligence Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section id="loginScreen" class="login-screen">
+      <form id="loginForm" class="login-card">
+        <span class="brand-mark">AI</span>
+        <p class="eyebrow">Domain based access</p>
+        <h1>Sign in to AttendIQ</h1>
+        <p>Use admin, teacher, or student email domains to open the correct attendance workspace.</p>
+        <input id="loginEmail" type="email" required value="admin@admin.attendiq.edu" />
+        <button type="submit">Login</button>
+        <div class="demo-logins">
+          <button type="button" data-email="admin@admin.attendiq.edu" class="ghost">Admin</button>
+          <button type="button" data-email="nisha.rao@teacher.attendiq.edu" class="ghost">Teacher</button>
+          <button type="button" data-email="ai202603@student.attendiq.edu" class="ghost">Student</button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">AI</span>
+        <div>
+          <strong>AttendIQ</strong>
+          <small>Analytics Command Center</small>
+        </div>
+      </div>
+      <nav>
+        <a class="active" href="#overview">Overview</a>
+        <a href="#risk">Risk Radar</a>
+        <a href="#students">Students</a>
+        <a href="#actions">Actions</a>
+      </nav>
+      <div class="sidebar-note">
+        <span id="roleLabel">Live mode</span>
+        <strong id="lastUpdated">Syncing...</strong>
+        <button id="logoutBtn" class="ghost small">Logout</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Attendance dashboard with analytics analysis</p>
+          <h1>Prevent attendance problems before they become dropouts.</h1>
+        </div>
+        <div class="top-actions">
+          <button id="addStudentBtn" class="ghost">Add student</button>
+          <button id="addTeacherBtn" class="ghost">Add teacher</button>
+          <button id="parentEmailBtn" class="ghost">Email parents</button>
+          <button id="exportBtn" class="ghost">Export CSV</button>
+          <button id="printBtn" class="ghost">Print report</button>
+          <button id="refreshBtn" class="ghost">Refresh</button>
+          <button id="resetBtn">Reset demo</button>
+        </div>
+      </header>
+
+      <section id="overview" class="metric-grid">
+        <article class="metric">
+          <span>Total students</span>
+          <strong id="totalStudents">--</strong>
+          <small>Across all active cohorts</small>
+        </article>
+        <article class="metric">
+          <span>Overall attendance</span>
+          <strong id="overallRate">--</strong>
+          <small>30-day weighted score</small>
+        </article>
+        <article class="metric">
+          <span>Absent today</span>
+          <strong id="absentToday">--</strong>
+          <small>Needs same-day follow-up</small>
+        </article>
+        <article class="metric warning">
+          <span>Critical risk</span>
+          <strong id="criticalStudents">--</strong>
+          <small>Predicted intervention cases</small>
+        </article>
+
+        <article class="panel admin-only">
+          <div class="panel-head">
+            <div>
+              <h2>Teacher Directory</h2>
+              <p>Admin-managed department access</p>
+            </div>
+          </div>
+          <div id="teacherList" class="departments"></div>
+        </article>
+
+        <article class="panel admin-teacher-only">
+          <div class="panel-head">
+            <div>
+              <h2>Parent Email Automation</h2>
+              <p>Low attendance messages prepared automatically</p>
+            </div>
+          </div>
+          <div id="emailLog" class="log-list"></div>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <article class="panel wide">
+          <div class="panel-head">
+            <div>
+              <h2>Attendance Trend</h2>
+              <p>Last 14 academic days</p>
+            </div>
+            <span class="pill">Real-time ready</span>
+          </div>
+          <canvas id="trendChart" width="900" height="320"></canvas>
+        </article>
+
+        <article class="panel" id="actions">
+          <div class="panel-head">
+            <div>
+              <h2>AI Action Brief</h2>
+              <p>Prioritized next moves</p>
+            </div>
+          </div>
+          <div id="insightList" class="insights"></div>
+        </article>
+
+        <article class="panel" id="risk">
+          <div class="panel-head">
+            <div>
+              <h2>Risk Radar</h2>
+              <p>Students needing intervention</p>
+            </div>
+          </div>
+          <div id="riskList" class="risk-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Department Health</h2>
+              <p>Compare cohorts quickly</p>
+            </div>
+          </div>
+          <div id="departmentList" class="departments"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Smart Alerts</h2>
+              <p>Operational risks to handle today</p>
+            </div>
+          </div>
+          <div id="alertList" class="alerts"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Intervention Log</h2>
+              <p>Advisor actions recorded locally</p>
+            </div>
+            <button id="clearLogBtn" class="ghost small">Clear</button>
+          </div>
+          <div id="interventionLog" class="log-list"></div>
+        </article>
+      </section>
+
+      <section id="students" class="panel table-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Student Operations</h2>
+            <p>Search, monitor, and mark today's attendance</p>
+          </div>
+          <div class="filters">
+            <input id="searchInput" type="search" placeholder="Search student, roll no, department" />
+            <select id="statusSelect">
+              <option value="present">Present</option>
+              <option value="late">Late</option>
+              <option value="absent">Absent</option>
+              <option value="excused">Excused</option>
+            </select>
+            <button id="markFilteredBtn" class="ghost">Mark filtered</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Department</th>
+                <th>Attendance</th>
+                <th>Risk</th>
+                <th>Advisor</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="studentRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <dialog id="studentDialog">
+      <form id="studentForm" method="dialog">
+        <div class="panel-head">
+          <div>
+            <h2>Add Student</h2>
+            <p>Create a new student record for monitoring</p>
+          </div>
+          <button type="button" id="closeDialogBtn" class="ghost small">Close</button>
+        </div>
+        <div class="form-grid">
+          <label>
+            Name
+            <input name="name" required placeholder="Student name" />
+          </label>
+          <label>
+            Roll no
+            <input name="rollNo" required placeholder="DS202699" />
+          </label>
+          <label>
+            Department
+            <input name="department" required placeholder="Data Science" />
+          </label>
+          <label>
+            Year
+            <input name="year" required type="number" min="1" max="5" value="1" />
+          </label>
+          <label>
+            Section
+            <input name="section" placeholder="A" />
+          </label>
+          <label>
+            Advisor
+            <input name="advisor" placeholder="Advisor name" />
+          </label>
+          <label>
+            Student email
+            <input name="studentEmail" placeholder="roll@student.attendiq.edu" />
+          </label>
+          <label>
+            Parent email
+            <input name="parentEmail" placeholder="parent@example.com" />
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button type="submit">Save student</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="teacherDialog">
+      <form id="teacherForm" method="dialog">
+        <div class="panel-head">
+          <div>
+            <h2>Add Teacher</h2>
+            <p>Give a teacher access to one department</p>
+          </div>
+          <button type="button" id="closeTeacherDialogBtn" class="ghost small">Close</button>
+        </div>
+        <div class="form-grid">
+          <label>
+            Name
+            <input name="name" required placeholder="Teacher name" />
+          </label>
+          <label>
+            Email
+            <input name="email" required type="email" placeholder="name@teacher.attendiq.edu" />
+          </label>
+          <label>
+            Department
+            <input name="department" required placeholder="Computer Science" />
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button type="submit">Save teacher</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
