@@ -1,51 +1,112 @@
-# Attendance Dashboard with Analytics Analysis
+# AttendIQ - AI-Powered Attendance Dashboard
 
-AttendIQ is a full-stack attendance intelligence dashboard for colleges, schools, and training teams. It does more than record attendance: it highlights risky attendance patterns, compares departments, and recommends practical follow-up actions before students fall too far behind.
+## 📌 Overview
 
-## What Makes It Stand Out
+AttendIQ is a full-stack web application that helps educational institutions monitor and improve student attendance through intelligent analytics and early intervention features.
 
-- Real-time-ready dashboard with live refresh and same-day attendance marking.
-- AI-style risk scoring based on attendance rate, absence streaks, late marks, and recent trend drops.
-- Department health analytics for quickly finding weak cohorts.
-- Action brief that turns raw attendance data into advisor-ready interventions.
-- Works with MongoDB when configured, and automatically falls back to realistic demo data when no database is available.
+The dashboard provides real-time attendance tracking, risk analysis, department-wise insights, and automated parent alert simulations.
 
-## Tech Stack
+---
 
-- Frontend: HTML, CSS, JavaScript, Canvas charts
-- Backend: Node.js, Express
-- Database: MongoDB with Mongoose, plus in-memory demo fallback
+## ✨ Features
 
-## Run Locally
+* 👨‍🎓 Student Attendance Management
+* 📊 Interactive Analytics Dashboard
+* ⚠️ Attendance Risk Scoring
+* 📈 Department-wise Performance Analysis
+* 👩‍🏫 Admin & Teacher Login Roles
+* 📧 Parent Email Alert Simulation
+* 📝 Intervention Planning System
+* 📥 CSV Report Export
+* 🖨️ Printable Reports
+* 📱 Responsive User Interface
 
-```bash
-cd server
-npm install
-npm start
-```
+---
 
-Open:
+## 🛠️ Tech Stack
 
-```text
-http://localhost:5000
-```
+### Frontend
 
-Optional MongoDB setup:
+* HTML5
+* CSS3
+* JavaScript
 
-```text
-MONGO_URI=your_mongodb_connection_string
-PORT=5000
-```
+### Backend
 
-## Main API
+* Node.js
+* Express.js
 
-- `GET /api/health`
-- `GET /api/students`
-- `POST /api/students`
-- `PATCH /api/students/:id/attendance`
-- `GET /api/students/analytics/overview`
-- `POST /api/students/demo/reset`
+### Database
 
-## Real-World Problem Solved
+* MongoDB
+* In-Memory Demo Data (Deployment)
 
-Institutions often discover attendance issues after students have already missed too many classes. This dashboard helps staff act earlier by showing who is at risk, where attendance is dropping, and what action should happen next.
+### Deployment
+
+* Render
+
+### Version Control
+
+* Git
+* GitHub
+
+---
+
+## 🚀 Live Demo
+
+https://attendiq-attendance-dashboard.onrender.com
+
+---
+
+## 📂 GitHub Repository
+
+https://github.com/Harshini-2703/AttendIQ-Attendance-Dashboard
+
+---
+
+## 🔐 Demo Login
+
+### Admin
+
+[admin@attendiq.com](mailto:admin@attendiq.com)
+
+### Teacher
+
+[teacher.cse@attendiq.com](mailto:teacher.cse@attendiq.com)
+
+### Student
+
+[student@attendiq.com](mailto:student@attendiq.com)
+
+---
+
+## 🎯 Key Modules
+
+* Attendance Monitoring
+* Student Analytics
+* Risk Prediction
+* Parent Notification
+* Department Dashboard
+* Intervention Tracking
+* Report Generation
+
+---
+
+## 💡 Future Enhancements
+
+* AI Attendance Prediction
+* Real Email Integration
+* SMS Notifications
+* Face Recognition Attendance
+* Mobile Application
+
+---
+
+## 👩‍💻 Developed By
+
+**Harshini S**
+
+Aspiring Software Developer | Python & Full Stack Enthusiast
+
+LinkedIn:
+[www.linkedin.com/in/harshini-s-68b2793a4](http://www.linkedin.com/in/harshini-s-68b2793a4)
