@@ -110,3 +110,23 @@ Aspiring Software Developer | Python & Full Stack Enthusiast
 
 LinkedIn:
 [www.linkedin.com/in/harshini-s-68b2793a4](http://www.linkedin.com/in/harshini-s-68b2793a4)
+
+
+---
+
+## 📸 Project Screenshots
+
+### Dashboard Home
+![Dashboard Home](assets/dashboard-home%20admin%20features.png)
+
+### Smart Analysis
+![Smart Analysis](assets/smart%20analysis.png)
+
+### Risk Analytics
+![Risk Analytics](assets/risj-analytics.png)
+
+### Attendance Trends
+![Attendance Trends](assets/attendance%20trends.png)
+
+### Student Table
+![Student Table](assets/student%20table.png)
