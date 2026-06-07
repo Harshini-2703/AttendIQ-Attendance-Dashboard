@@ -123,7 +123,7 @@ LinkedIn:
 ![Smart Analysis](assets/smart%20analysis.png)
 
 ### Risk Analytics
-![Risk Analytics](assets/risj-analytics.png)
+![Risk Analytics](assets/risk-analytics.png)
 
 ### Attendance Trends
 ![Attendance Trends](assets/attendance%20trends.png)
