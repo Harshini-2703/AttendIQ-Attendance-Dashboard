@@ -3,9 +3,9 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 
-const connectDB = require("./config/db");
+
+require("dotenv").config();
 const studentRoutes = require("./routes/studentRoutes");
-const { setDatabaseMode } = require("./services/store");
 
 dotenv.config();
 
@@ -31,9 +31,7 @@ app.use("/api/students", studentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then((connected) => {
-  setDatabaseMode(connected);
-  app.listen(PORT, () => {
-    console.log(`Attendance dashboard running on http://localhost:${PORT}`);
-  });
+app.listen(PORT, () => {
+  console.log(`Attendance dashboard running on http://localhost:${PORT}`);
+  console.log("Connected to Supabase");
 });

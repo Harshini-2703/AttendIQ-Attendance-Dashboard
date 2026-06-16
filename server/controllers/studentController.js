@@ -60,7 +60,7 @@ const resetDemoData = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const user = store.getUserFromEmail(req.body.email);
+  const user = await store.getUserFromEmail(req.body.email);
   if (!user) {
     return res.status(401).json({
       error: "Use an AttendIQ domain email: admin@admin.attendiq.edu, teacher email, or student roll email.",
@@ -71,7 +71,7 @@ const login = async (req, res) => {
 
 const getScopedAnalytics = async (req, res) => {
   try {
-    const user = store.getUserFromEmail(req.query.email);
+    const user = await store.getUserFromEmail(req.query.email);
     if (!user) return res.status(401).json({ error: "Login required." });
     const students = await store.scopedStudents(user);
     res.json({ user, ...buildAnalytics(students) });
@@ -103,7 +103,7 @@ const addTeacher = async (req, res) => {
 
 const sendParentAlerts = async (req, res) => {
   try {
-    const user = store.getUserFromEmail(req.body.email);
+    const user = await store.getUserFromEmail(req.body.email);
     if (!user || user.role === "student") {
       return res.status(403).json({ error: "Only admin and teachers can send parent alerts." });
     }

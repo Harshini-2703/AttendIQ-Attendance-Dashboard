@@ -29,6 +29,11 @@ async function listStudents() {
     department: student.department,
     year: student.year,
     section: student.section,
+    
+    studentEmail: student.student_email,
+    parentEmail: student.parent_email,
+    guardianPhone: student.guardian_phone,
+    
     advisor: student.advisor,
     attendanceRate: student.attendance_rate,
     absent: student.absent,
@@ -50,6 +55,11 @@ async function addStudent(payload) {
         year: Number(payload.year),
         section: payload.section || "A",
         advisor: payload.advisor || "Unassigned",
+        
+        student_email: payload.studentEmail || null,
+        parent_email: payload.parentEmail || null,
+        guardian_phone: payload.guardianPhone || null,
+        
         attendance_rate: 100,
         absent: 0,
         late: 0,
@@ -68,28 +78,26 @@ async function addStudent(payload) {
 }
 
 async function markAttendance(studentId, payload) {
-  const student = memoryStudents.find((item) => item.id === studentId);
-
-  if (!student) return null;
-
   const date = payload.date || new Date().toISOString().slice(0, 10);
 
-  const existing = student.attendance.find(
-    (record) => record.date === date
-  );
+  const { data, error } = await supabase
+    .from("attendance")
+    .insert([
+      {
+        student_id: studentId,
+        attendance_date: date,
+        status: payload.status,
+        note: payload.note || "",
+      },
+    ])
+    .select();
 
-  if (existing) {
-    existing.status = payload.status;
-    existing.note = payload.note || "";
-  } else {
-    student.attendance.push({
-      date,
-      status: payload.status,
-      note: payload.note || "",
-    });
+  if (error) {
+    console.error("Supabase attendance error:", error);
+    throw error;
   }
 
-  return student;
+  return data[0];
 }
 
 async function resetDemoData() {
@@ -100,25 +108,43 @@ async function resetDemoData() {
 }
 
 async function listTeachers() {
-  return memoryTeachers;
+  const { data, error } = await supabase
+    .from("teachers")
+    .select("*")
+    .order("name");
+
+  if (error) {
+    console.error("Supabase listTeachers error:", error);
+    return [];
+  }
+
+  return data;
 }
 
 async function addTeacher(payload) {
-  const teacher = {
-    id: String(Date.now()),
-    name: payload.name,
-    email: payload.email,
-    department: payload.department,
-  };
+  const { data, error } = await supabase
+    .from("teachers")
+    .insert([
+      {
+        name: payload.name,
+        email: payload.email,
+        department: payload.department,
+        role: "teacher",
+      },
+    ])
+    .select();
 
-  memoryTeachers.push(teacher);
-  return teacher;
+  if (error) {
+    console.error("Supabase addTeacher error:", error);
+    throw error;
+  }
+
+  return data[0];
 }
 
-function getUserFromEmail(email = "") {
+async function getUserFromEmail(email = "") {
   const normalized = email.trim().toLowerCase();
-  const teachers = memoryTeachers;
-
+ 
   if (normalized.endsWith("@admin.attendiq.edu")) {
     return {
       id: "admin",
@@ -135,9 +161,17 @@ function getUserFromEmail(email = "") {
     };
   }
 
-  const teacher = teachers.find(
-    (item) => item.email.toLowerCase() === normalized
-  );
+const { data: teachers, error} = await supabase
+  .from("teachers")
+  .select("*");
+
+if (error) {
+  console.error("Teacher lookup error:", error);
+} 
+
+const teacher = teachers?.find(
+  (item) => item.email.toLowerCase() === normalized
+);
 
   if (teacher || normalized.endsWith("@teacher.attendiq.edu")) {
     return {
