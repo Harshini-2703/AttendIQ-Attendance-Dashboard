@@ -118,9 +118,40 @@ const getEmailLog = async (req, res) => {
   res.json(store.listEmailLog());
 };
 
+const updateStudent = async (req, res) => {
+  try {
+    const student = await store.updateStudent(req.params.id, req.body);
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found." });
+    }
+
+    res.json({
+      message: "Student updated successfully",
+      student,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteStudent = async (req, res) => {
+  try {
+    await store.deleteStudent(req.params.id);
+
+    res.json({
+      message: "Student deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   addStudent,
   getStudents,
+  updateStudent,
+  deleteStudent,
   markAttendance,
   getAnalytics,
   resetDemoData,

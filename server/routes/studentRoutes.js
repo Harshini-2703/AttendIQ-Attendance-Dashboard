@@ -4,6 +4,8 @@ const router = express.Router();
 const {
   addStudent,
   getStudents,
+  updateStudent,
+  deleteStudent,
   markAttendance,
   getAnalytics,
   resetDemoData,
@@ -18,6 +20,8 @@ const {
 router.get("/", getStudents);
 router.post("/", addStudent);
 router.post("/addStudent", addStudent);
+router.put("/:id", updateStudent);
+router.delete("/:id", deleteStudent);
 router.patch("/:id/attendance", markAttendance);
 router.get("/analytics/overview", getAnalytics);
 router.get("/analytics/scoped", getScopedAnalytics);

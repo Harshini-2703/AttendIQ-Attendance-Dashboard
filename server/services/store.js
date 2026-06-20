@@ -252,6 +252,45 @@ async function sendParentAlerts(threshold = 75, user = null) {
   return created;
 }
 
+async function updateStudent(id, payload) {
+  const { data, error } = await supabase
+    .from("students")
+    .update({
+      name: payload.name,
+      roll_no: payload.rollNo,
+      department: payload.department,
+      year: Number(payload.year),
+      section: payload.section,
+      advisor: payload.advisor,
+      student_email: payload.studentEmail,
+      parent_email: payload.parentEmail,
+      guardian_phone: payload.guardianPhone,
+    })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    console.error("Supabase updateStudent error:", error);
+    throw error;
+  }
+
+  return data[0];
+}
+
+async function deleteStudent(id) {
+  const { error } = await supabase
+    .from("students")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Supabase deleteStudent error:", error);
+    throw error;
+  }
+
+  return true;
+}
+
 function listEmailLog() {
   return emailLog;
 }
@@ -260,7 +299,8 @@ module.exports = {
   setDatabaseMode,
   listStudents,
   addStudent,
-  markAttendance,
+  updateStudent,
+  deleteStudent, markAttendance,
   resetDemoData,
   listTeachers,
   addTeacher,
