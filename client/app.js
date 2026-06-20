@@ -352,13 +352,32 @@ function renderStudents() {
         <td><strong class="risk-${student.riskLevel.toLowerCase()}">${student.riskLevel}</strong><span class="subtext">Score ${student.riskScore}</span></td>
         <td>${student.advisor}</td>
         <td>
-          ${
-            canMarkAttendance()
-              ? `<button data-id="${student.id}" class="mark-btn">Mark ${elements.statusSelect.value}</button>
-                 <button data-id="${student.id}" class="ghost small plan-btn">Plan</button>`
-              : `<span class="subtext">View only</span>`
-          }
-        </td>
+  ${
+    canMarkAttendance()
+      ? `
+      <button data-id="${student.id}" class="mark-btn">
+        Mark ${elements.statusSelect.value}
+      </button>
+
+      <button data-id="${student.id}" class="ghost small plan-btn">
+        Plan
+      </button>
+      
+      <button data-id="${student.id}" class="view-btn">
+        View
+      </button>
+
+      <button data-id="${student.id}" class="edit-btn">
+        Edit
+      </button>
+
+      <button data-id="${student.id}" class="delete-btn">
+        Delete
+      </button>
+      `
+      : `<span class="subtext">View only</span>`
+  }
+</td>
       </tr>
     `
     )
@@ -366,10 +385,29 @@ function renderStudents() {
 
   document.querySelectorAll(".mark-btn").forEach((button) => {
     button.addEventListener("click", () => markAttendance(button.dataset.id).catch(handleError));
-  });
+});
+  
   document.querySelectorAll("#studentRows .plan-btn").forEach((button) => {
     button.addEventListener("click", () => createIntervention(button.dataset.id));
-  });
+});
+
+  document.querySelectorAll(".view-btn").forEach((button) => {
+  button.addEventListener("click", () =>
+    viewStudent(button.dataset.id)
+  );
+});
+
+  document.querySelectorAll(".delete-btn").forEach((button) => {
+  button.addEventListener("click", () =>
+    deleteStudent(button.dataset.id).catch(handleError)
+  );
+});
+
+document.querySelectorAll(".edit-btn").forEach((button) => {
+  button.addEventListener("click", () =>
+    editStudent(button.dataset.id).catch(handleError)
+  );
+});
 }
 
 async function login(event) {
@@ -409,6 +447,74 @@ async function markFilteredStudents() {
   );
   await fetchAnalytics(false);
   showToast(`${students.length} students marked ${elements.statusSelect.value}`);
+}
+
+async function deleteStudent(id) {
+  if (!confirm("Delete this student?")) return;
+
+  await requestJson(`${apiBase}/${id}`, {
+    method: "DELETE",
+  });
+
+  await fetchAnalytics(false);
+  showToast("Student deleted");
+}
+
+async function editStudent(id) {
+  const student = analytics.students.find((s) => s.id === id);
+
+  if (!student) {
+    showToast("Student not found", "error");
+    return;
+  }
+
+  const name = prompt("Student Name", student.name);
+  if (!name) return;
+
+  const department = prompt("Department", student.department);
+  if (!department) return;
+  
+  const advisor = prompt("Mentor / Advisor", student.advisor);
+  if (!advisor) return;
+
+  await requestJson(`${apiBase}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name,
+      department,
+      advisor,
+    }),
+  });
+
+  await fetchAnalytics(false);
+  showToast("Student updated");
+}
+
+async function viewStudent(id) {
+  const student = analytics.students.find((s) => s.id === id);
+
+  if (!student) return;
+
+  alert(`
+Name: ${student.name}
+
+Roll No: ${student.rollNo}
+
+Department: ${student.department}
+
+Year: ${student.year}
+
+Section: ${student.section}
+
+Advisor: ${student.advisor}
+
+Attendance: ${student.attendanceRate}%
+
+Risk Level: ${student.riskLevel}
+  `);
 }
 
 async function addStudent(event) {
